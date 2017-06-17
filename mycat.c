@@ -47,6 +47,10 @@ main (int argc, char **argv)
 		}
 		else {
 			curFile = fopen(ai.inputs[i], "r");
+			if (curFile == NULL) {
+				printf("%s: %s: No such file or directory\n", argv[0], ai.inputs[i]);
+				continue;
+			}
 		}
 
 		ssize_t read;
@@ -64,13 +68,6 @@ main (int argc, char **argv)
 				needsqueeze = 0;
 			}
 
-			if (ai.show_tabs_flag) {
-				char *temp = changeTab(lineptr);
-				free(lineptr);
-				lineptr = temp;
-				n = strlen(lineptr) + 1;
-			}
-
 			if (ai.show_ends_flag) {
 				lineptr[read-1] = '\0';	// strip newline
 			}
@@ -78,7 +75,18 @@ main (int argc, char **argv)
 			if (ai.number_flag)
 				printf("%6lu\t", ++noLines);
 
-			printf("%s%s", lineptr, append);
+			if (ai.show_tabs_flag) {
+				size_t k;
+				for(k = 0; lineptr[k] != '\0'; ++k)
+					if (lineptr[k] == '\t')
+						printf("^I");
+					else
+						printf("%c", lineptr[k]);
+				printf("%s", append);
+			}
+			else {
+				printf("%s%s", lineptr, append);
+			}
 		}
 
 		fclose(curFile);
@@ -86,32 +94,7 @@ main (int argc, char **argv)
 
 	free(lineptr);
 
+	cmdline_parser_free (&ai);
+
 	exit(EXIT_SUCCESS);
 }
-
-char *
-changeTab(char *lineptr)
-{
-	int i;
-	int n = strlen(lineptr);
-
-	unsigned int tabCount = 0;
-	for(i = 0; i < n; ++i)
-		if (lineptr[i] == '\t')
-			++tabCount;
-
-	char *newString = malloc(n + tabCount + 1);	// 1 for '\0'
-
-	int j;
-	for(i = 0, j = 0; i < n; ++i)
-		if (lineptr[i] == '\t') {
-			newString[j++] = '^';
-			newString[j++] = 'I';
-		}
-		else {
-			newString[j++] = lineptr[i];
-		}
-
-	return newString;
-}
-			
