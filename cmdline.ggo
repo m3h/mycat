@@ -1,0 +1,6 @@
+version "0.1"
+package "mycat"
+purpose "Hopefully it will replace cat as more superious"
+
+# Options
+option	"show-ends"	E	"display $ at end of each line"	flag	off	

@@ -1,6 +1,7 @@
 # Prerequisites
 *.d
 
+mycat
 # Object files
 *.o
 *.ko
