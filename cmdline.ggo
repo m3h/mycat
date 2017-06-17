@@ -1,6 +1,9 @@
 version "0.1"
 package "mycat"
-purpose "Hopefully it will replace cat as more superious"
+purpose "partial crap reimplementation of cat"
 
 # Options
-option	"show-ends"	E	"display $ at end of each line"	flag	off	
+option	"show-ends"		E	"display $ at end of each line"			flag	off	
+option 	"number"		n	"number all output liens"				flag	off
+option	"show-tabs"		T	"display TAB characters as ^I"			flag	off
+option	"squeeze-blank"	s	"suppress repeated empty output lines"	flag	off
